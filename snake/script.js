@@ -41,6 +41,7 @@ class Snake{
         this.width += width
 
     }
+
 }
 
 //class food
@@ -61,6 +62,29 @@ class Food {
         this.position.y = this.velocity.y
     }
 }
+//link list
+class LinkedList{
+    constructor() {
+        this.head =null
+    }
+    insertFront(node){
+       return this.head= new Node(node, this.head)
+    }
+    // insertToTail()
+}
+class Node{
+    constructor(head,next) {
+        this.head=head
+        this.next = next;
+    }
+
+}
+const link = new LinkedList()
+link.insertFront(83)
+link.insertFront(93)
+link.insertFront(0)
+link.insertFront(2)
+console.log(link)
 const snake = new Snake({
     position:{
         x:500/2,
@@ -79,8 +103,8 @@ const food = new Food({
     velocity:{
         x:0,
         y:0
-    },width:10,
-    height:10
+    },width:15,
+    height:15
 })
 snake.draw()
 
@@ -124,6 +148,7 @@ patterns.forEach((row,index)=>{
 const keys =['w','a','s','d']
 let lastKey = ''
 
+
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height)
     food.drawFood()
@@ -134,29 +159,42 @@ function animate(){
     snake.width =15
     food.velocity.x=0
     food.velocity.y=0
+    const speed = .15
     //snake eat the food
-    if(food.position.x + food.width >= snake.position.x &&
-    food.position.x === snake.position.x &&
-    food.position.x <= snake.position.x + snake.width ){
-        console.log('snake position x',snake.position.x)
-        console.log('food position x',food.position.x)
+    const snakeTop = snake.position.y
+    const snakeBottom = snake.position.y + snake.height
+    const snakeLeft = snake.position.x
+    const snakeRight = snake.position.x + snake.width
+
+    const foodTop = food.position.y
+    const foodBottom = food.position.y + food.height
+    const foodLeft = food.position.x
+    const foodRight = food.position.x + food.width
+
+    if(snakeLeft < foodRight && snakeRight >foodLeft &&
+     snakeTop < foodBottom && snakeBottom > foodTop){
+        const random = Math.floor(Math.random()*425 )+30
+        food.position.x=random;
+        food.position.y = random;
+        console.log("x position:" ,foodLeft)
+        console.log("y position:" ,foodTop)
         console.log('eat')
     }
     // console.log(whenSnakeEat())
     //move the snake inside the square
     if( lastKey ==='a'&&
         snake.position.x>30 ){
-        snake.velocity.x =-1;
+        snake.velocity.x =-2;
     }else if( lastKey === 'd'&&
         snake.position.x<455
     ){
-        snake.velocity.x = 1
+        snake.velocity.x = 2
     }else if( lastKey === 'w'&&
         snake.position.y>30){
-        snake.velocity.y =- 1
+        snake.velocity.y =- 2
     }else if(lastKey === 's'&&
         snake.position.y<455){
-        snake.velocity.y = 1
+        snake.velocity.y = 2
     }
     requestAnimationFrame(animate)
 }
