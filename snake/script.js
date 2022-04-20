@@ -38,8 +38,6 @@ class Snake{
         this.draw()
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
-        this.width += width
-
     }
 
 }
@@ -55,11 +53,6 @@ class Food {
     drawFood(){
         ctx.fillStyle='blue'
         ctx.fillRect(this.position.x,this.position.y,this.width,this.height)
-    }
-    updateFood(){
-        this.drawFood()
-        this.position.x = this.velocity.x
-        this.position.y = this.velocity.y
     }
 }
 //link list
@@ -151,15 +144,13 @@ let lastKey = ''
 
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height)
-    food.drawFood()
     snake.update()
+    food.drawFood()
     blocks.forEach(block => block.draw())
     snake.velocity.x=0;
     snake.velocity.y=0
-    snake.width =15
     food.velocity.x=0
     food.velocity.y=0
-    const speed = .15
     //snake eat the food
     const snakeTop = snake.position.y
     const snakeBottom = snake.position.y + snake.height
@@ -173,9 +164,8 @@ function animate(){
 
     if(snakeLeft < foodRight && snakeRight >foodLeft &&
      snakeTop < foodBottom && snakeBottom > foodTop){
-        const random = Math.floor(Math.random()*425 )+30
-        food.position.x=random;
-        food.position.y = random;
+        food.position.x=Math.floor(Math.random()*425 )+30
+        food.position.y = Math.floor(Math.random()*425 )+30;
         console.log("x position:" ,foodLeft)
         console.log("y position:" ,foodTop)
         console.log('eat')
