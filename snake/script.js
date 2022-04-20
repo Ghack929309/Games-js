@@ -59,26 +59,34 @@ class Food {
 class LinkedList{
     constructor() {
         this.head =null
+        this.length =0
     }
-    insertFront(node){
-       return this.head= new Node(node, this.head)
-    }
-    // insertToTail()
-}
-class Node{
-    constructor(head,next) {
-        this.head=head
-        this.next = next;
+    insertToTail(value){
+        const node = new Node(value)
+        if(this.head===null){
+            this.head = node
+
+        }else{
+            let current = this.head
+           while(current.next){
+                current = current.next
+           }
+           current.next = node
+        }
+        this.length++
     }
 
 }
+class Node{
+    constructor(value) {
+        this.value=value
+        this.next = null;
+    }
+
+}
+//create linkList of snake
 const link = new LinkedList()
-link.insertFront(83)
-link.insertFront(93)
-link.insertFront(0)
-link.insertFront(2)
-console.log(link)
-const snake = new Snake({
+link.insertToTail({
     position:{
         x:500/2,
         y:500/2
@@ -88,6 +96,10 @@ const snake = new Snake({
     },
     width:15
 })
+//add the snake head to the list
+const {position,velocity,width}=link.head.value
+const snake = new Snake({position,velocity,width})
+// create a food
 const food = new Food({
     position:{
         x:150,
@@ -96,9 +108,10 @@ const food = new Food({
     velocity:{
         x:0,
         y:0
-    },width:15,
-    height:15
+    },width:10,
+    height:10
 })
+//draw the snake
 snake.draw()
 
 //design pattern
@@ -108,8 +121,8 @@ const patterns = [
     ['-','-','-']
 ]
 // animate the snake on canvas
-let width = 167;
-let height = 235;
+let widthCv = 167;
+let heightCv = 235;
 // TODO : CREATE AN ARRAY OF block, THEN LOOP TO DRAW EACH BLOCK TO CONSTRUCT THE PATTERN
 const blocks =[]
 patterns.forEach((row,index)=>{
@@ -118,10 +131,10 @@ patterns.forEach((row,index)=>{
             case '-':
                 blocks.push(new Grid({
                     position:{
-                        x:width*column,
-                        y:height *index
+                        x:widthCv*column,
+                        y:heightCv *index
                     },
-                    width:width,
+                    width:widthCv,
                     height: 30
                 }))
                 break
@@ -166,11 +179,17 @@ function animate(){
      snakeTop < foodBottom && snakeBottom > foodTop){
         food.position.x=Math.floor(Math.random()*425 )+30
         food.position.y = Math.floor(Math.random()*425 )+30;
-        console.log("x position:" ,foodLeft)
-        console.log("y position:" ,foodTop)
-        console.log('eat')
+        link.insertToTail({
+            position:{
+                x:snakeRight,
+                y:snakeBottom
+            },velocity:{
+                x:snake.position.x,
+                y:snake.position.y
+            },width:15
+        })
+        console.log(link)
     }
-    // console.log(whenSnakeEat())
     //move the snake inside the square
     if( lastKey ==='a'&&
         snake.position.x>30 ){
@@ -189,11 +208,6 @@ function animate(){
     requestAnimationFrame(animate)
 }
 animate()
-function whenSnakeEat(){
-    if(food.position.x + food.width >= snake.position.x ){
-            console.log('eat')
-        }
-}
 
 
 addEventListener('keydown',({key})=>{
